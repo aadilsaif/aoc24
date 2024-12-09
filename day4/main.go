@@ -35,7 +35,7 @@ func getValue(matrix [][]string, x int, y int) string {
 	if x < 0 || y < 0 || y > len(matrix)-1 || x > (len(matrix[0]))-1 {
 		return ""
 	}
-	return matrix[y][x]
+	return matrix[x][y]
 }
 
 func checkDirections(matrix [][]string, x int, y int) int {
@@ -90,35 +90,32 @@ func checkDirections2(matrix [][]string, x int, y int) int {
 	score := 0
 	if getValue(matrix, x, y-1) == "M" && getValue(matrix, x, y+1) == "S" {
 		if getValue(matrix, x+1, y) == "M" && getValue(matrix, x-1, y) == "S" {
-			score = 1
+			score += 1
+		} else if getValue(matrix, x+1, y) == "S" && getValue(matrix, x-1, y) == "M" {
+			score += 1
 		}
-		if getValue(matrix, x+1, y) == "S" && getValue(matrix, x-1, y) == "M" {
-			score = 1
-		}
-	}
-	if getValue(matrix, x, y-1) == "S" && getValue(matrix, x, y+1) == "M" {
+	} else if getValue(matrix, x, y-1) == "S" && getValue(matrix, x, y+1) == "M" {
 		if getValue(matrix, x+1, y) == "M" && getValue(matrix, x-1, y) == "S" {
-			score = 1
-		}
-		if getValue(matrix, x+1, y) == "S" && getValue(matrix, x-1, y) == "M" {
-			score = 1
+			score += 1
+		} else if getValue(matrix, x+1, y) == "S" && getValue(matrix, x-1, y) == "M" {
+			score += 1
 		}
 	}
 	if getValue(matrix, x-1, y-1) == "M" && getValue(matrix, x+1, y+1) == "S" {
 		if getValue(matrix, x+1, y-1) == "M" && getValue(matrix, x-1, y+1) == "S" {
-			score = 1
+			score += 1
+		} else if getValue(matrix, x+1, y-1) == "S" && getValue(matrix, x-1, y+1) == "M" {
+			score += 1
 		}
-		if getValue(matrix, x+1, y-1) == "S" && getValue(matrix, x-1, y+1) == "M" {
-			score = 1
+	} else if getValue(matrix, x-1, y-1) == "S" && getValue(matrix, x+1, y+1) == "M" {
+		if getValue(matrix, x+1, y-1) == "M" && getValue(matrix, x-1, y+1) == "S" {
+			score += 1
+		} else if getValue(matrix, x+1, y-1) == "S" && getValue(matrix, x-1, y+1) == "M" {
+			score += 1
 		}
 	}
-	if getValue(matrix, x-1, y-1) == "S" && getValue(matrix, x+1, y+1) == "M" {
-		if getValue(matrix, x+1, y-1) == "M" && getValue(matrix, x-1, y+1) == "S" {
-			score = 1
-		}
-		if getValue(matrix, x+1, y-1) == "S" && getValue(matrix, x-1, y+1) == "M" {
-			score = 1
-		}
+	if score > 1 {
+		fmt.Printf("\n%d At coordinate %d, %d \n", score, x, y)
 	}
 	return score
 }
@@ -126,10 +123,10 @@ func part2(matrix [][]string) int {
 	score := 0
 	for i := 1; i < len(matrix)-1; i++ {
 		for j := 1; j < len(matrix[i])-1; j++ {
-			if getValue(matrix, j, i) != "A" {
+			if getValue(matrix, i, j) != "A" {
 				continue
 			}
-			score += checkDirections2(matrix, j, i)
+			score += checkDirections2(matrix, i, j)
 		}
 	}
 	return score
